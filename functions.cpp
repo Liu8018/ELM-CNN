@@ -23,13 +23,16 @@ void deconvInputMats(const std::vector<cv::Mat> &inputMats,
     //去卷积
     for(int i=0;i<n;i++)
     {
-        cv::Mat X(h+2*padding,w+2*padding,CV_32F,cv::Scalar(0));
-        inputMats[i].copyTo(X(cv::Range(padding,X.rows-padding),cv::Range(padding,X.cols-padding)));
-        
         cv::Mat nROI = deconvedMat(cv::Range(i*snXh,(i+1)*snXh),cv::Range(0,Xw));
+        
+        std::vector<cv::Mat> imgChannels;
+        cv::split(inputMats[i],imgChannels);
         
         for(int j=0;j<c;j++)
         {
+            cv::Mat X(h+2*padding,w+2*padding,CV_32F,cv::Scalar(0));
+            imgChannels[j].copyTo(X(cv::Range(padding,X.rows-padding),cv::Range(padding,X.cols-padding)));
+            
             cv::Mat cROI = nROI(cv::Range(0,snXh),cv::Range(j*scXw,(j+1)*scXw));
             
             int xBegin = Fw/2;
