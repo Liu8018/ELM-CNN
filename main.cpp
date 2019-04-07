@@ -41,7 +41,7 @@ int main()
     std::vector<std::vector<bool>> trainLabelBins;
     std::vector<std::vector<bool>> testLabelBins;
     loadMnistData_csv("/media/liu/D/linux-windows/dataset/MNIST_data2/mnist_test.csv",
-                      0.01,trainImgs,testImgs,trainLabelBins,testLabelBins);
+                      0.8,trainImgs,testImgs,trainLabelBins,testLabelBins);
     
     //训练数据去卷积
     int Fw=5,Fh=5,padding=2,stride=1;
@@ -52,7 +52,7 @@ int main()
     normalize_img(deconvedMat);
     
     //设定卷积核数目
-    int k = 10;
+    int k = 3;
     
     //随机生成矩阵
     cv::Mat rw1;
@@ -70,11 +70,11 @@ int main()
     std::cout<<"test1"<<std::endl;
     //展开
     cv::Mat H1_l;
-    convedMat2Line(H1,H1_l,1);
+    reshapeConvedMat(H1,trainImgs.size(),H1_l);
     
     std::cout<<"test2"<<std::endl;
     //随机生成矩阵
-    int nHiddenNodes=100;
+    int nHiddenNodes=200;
     cv::Mat rw2;
     randomGenerate(rw2,cv::Size(nHiddenNodes,H1_l.cols));
     
@@ -90,13 +90,19 @@ int main()
     
     std::cout<<"test4"<<std::endl;
     //测试
+    float score0 = calcScore(tH2*W_FC,trainTarget);
+    std::cout<<"score on training data:"<<score0<<std::endl;
+    
+    
     cv::Mat testDeconvedMat;
     deconvInputMats(testImgs,Fh,Fw,padding,stride,testDeconvedMat);
+    
+    normalize_img(testDeconvedMat);
     
     std::cout<<"test5"<<std::endl;
     cv::Mat t1 = testDeconvedMat*F;
     cv::Mat t2;
-    mat2line(t1,t2,1);
+    reshapeConvedMat(t1,testImgs.size(),t2);
     
     std::cout<<"test6"<<std::endl;
     t2 *= rw2;

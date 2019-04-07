@@ -18,7 +18,7 @@ void deconvInputMats(const std::vector<cv::Mat> &inputMats,
 void neighborPix2Line(const cv::Mat &img, int x, int y, int Fw, int Fh, cv::Mat &line);
 
 //展开卷积后的图像
-void convedMat2Line(const cv::Mat &mat, int n);
+void reshapeConvedMat(const cv::Mat &mat, int n, cv::Mat &line);
 
 //加载图像
 void inputImgsFrom(const std::string datasetPath, 

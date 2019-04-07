@@ -77,9 +77,18 @@ void neighborPix2Line(const cv::Mat &img, int x, int y, int Fw, int Fh, cv::Mat 
     */
 }
 
-void convedMat2Line(const cv::Mat &mat, int n)
+void reshapeConvedMat(const cv::Mat &mat, int n, cv::Mat &result)
 {
+    int u = mat.rows/n;
+    result.create(n,mat.cols*u,CV_32F);
     
+    for(int i=0;i<n;i++)
+    {
+        cv::Mat matROI = mat(cv::Range(i*u,(i+1)*u),cv::Range(0,mat.cols));
+        cv::Mat resultROI = result(cv::Range(i,i+1),cv::Range(0,result.cols));
+        
+        mat2line(matROI,resultROI,1);
+    }
 }
 
 //加载图像
